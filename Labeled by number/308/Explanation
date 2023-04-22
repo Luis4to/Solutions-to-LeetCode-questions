@@ -1,4 +1,4 @@
-LeetCode 308
+LeetCode 308 is found at https://leetcode.com/problems/range-sum-query-mutable/description/
 
 For this problem, we will construct a segment tree called segmentTree, where the leaves of segmentTree store the original values of the nums array, and each
 node stores the sum of the elements of the array nums with indices in a certain interval [left, right]. Not all the possible sums corresponding to each
