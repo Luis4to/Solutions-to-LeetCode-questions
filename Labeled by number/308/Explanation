@@ -1,0 +1,39 @@
+LeetCode 308
+
+For this problem, we will construct a segment tree called segmentTree, where the leaves of segmentTree store the original values of the nums array, and each
+node stores the sum of the elements of the array nums with indices in a certain interval [left, right]. Not all the possible sums corresponding to each
+possible subinterval will be stored, since there are [n(n-1)]/2+n subintervals of [1,n] for any positive integer $n,$ which would imply using O(n^2) memory
+if n=nums.Length.
+
+We will assign the intervals in the following manner. The root node will be associated to [1,n], the interval of indices containing all the elements of
+nums. If a node is associated to the interval of indices [left,right], then the left child will be associated to the interval [left, mid] and the right
+child will be associated to the interval [mid+1,right], where mid is chosen so that both intervals are disjoint, and contain either m elements each, or 
+m elements and m+1 elements respectively.
+
+Now, we need to compute the number of nodes that segmentTree should have. We could add trivial nodes if we wanted, but this would lead to unnecessary use
+of memory. Note that the number of nodes of segmentTree is 1 more than the sum of the number of nodes of each of its children. For n=1, the number of nodes
+segmentTree is 1 (base case). For n=2, the number of nodes of segmentTree is 3. We conjecture that the number of nodes of segmentTree is 2n-1. If we assume that this 
+rule holds for each of the arrays associated to the children of the root node (inductive hypothesis), then it holds for the original array nums. To see this,
+note that 1+2a-1+ 2b-1= 2(a+b)-1 for any pair of integers a,b. Hence, the number of nodes of segmentTree is 2n-1.
+
+We want to use an array to implement segmentTree, and we need a nice way to locating the children of each node. Note that if we have the interval 
+[left, right] associated to node, then we can compute the sizes of the intervals associated to its children. So, we can label the left child of node as
+node+1, and the right child as node+1+x, where x is the number of nodes on the subtree of segmentTree with the left child as a the root. Hence, we can
+guarantee that the resulting array will have size 2n-1, and that we can locate easily the left child and the right child of any node, provided that
+we keep track of the associated interval [left, right].
+
+Once we have managed to decide the details of the implementation of segmentTree, we can proceed to populate it. If we want to update the value of a leaf,
+and we have the associated index in the original array nums, we need to find the node which is associated to the interval [index,index]. We can start from
+the root nodee and the interval [1,n]. At each step, we need to decide whether index is in the interval associated to the left child, or the right child, 
+and repeat the process in the corresponding subtree. If the interval has length 1, then we found the correct node associated to [index,index], in principle.
+Now we can just update the value of the node. We need to backtrack to update the value of the parent node of the leaf as the sum of its children, and
+repeat this process from the bottom to the top.
+
+After populating the segmentTree, we can use the same procedure to update the leaves if we need to change their values for whatever reason. To find the sum
+of an arbitrary interval, you may proceed as follows. First, you check if the interval associated to the root is contained in the target interval. If so
+,then the answer is the value of the root. If not, then do the same for its children, the result will be the sum of the results obtained for 
+the children. If you reach a leaf, and the associated interval is not contained in the target interval, then the result for that leaf is 0. This procedure
+is guaranteed to work since the intervals associated to the children of node are disjoint, and their union is the interval associated to node.
+
+Thanks for reading, and happy coding!
+
